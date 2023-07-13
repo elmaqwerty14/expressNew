@@ -7,9 +7,9 @@ const port = 3000
 //   res.send('Hello World!')
 // })
 
-var ap = function (req, res) {
+app.get ('/', function (req, res) {
    res.send('Hello World!')
-}
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
