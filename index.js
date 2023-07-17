@@ -45,7 +45,7 @@ const port = 3000
 app.get("/", (req, res) => {
     // query database
     let id = 5;
-    pool.query('SELECT * FROM tabelpertama', (error, results) => {
+    pool.query('SELECT * FROM produk', (error, results) => {
       if (error) {
         throw error;
       }
