@@ -25,15 +25,23 @@
 //   console.log(`Example app listening on port ${port}`)
 // })
 
-const express = require("express");
+// const express = require("express");
+import express from 'express';
 // const {} = require('express'); // Cara lain import,  kalau mau tau file apa saja yang bisa di 
                               //  --- import pake CTRL + SPASI
 
-const pool = require("./connection.js"); // require berarti pake comen js
+// const pool = require("./connection.js"); // require berarti pake comen js
+import pool from './connection.js';
 
 const app = express();
 const port = 3000;
 //  console.log(pool);
+
+import { hi } from  "./latihan.mjs"
+console.log(hi())
+import { hello } from  "./latihan.mjs"
+console.log(hello())
+
 app.get("/", (req, res) => {
   // query database
   pool.query("SELECT * FROM tabelpertama", (error, results) => {
