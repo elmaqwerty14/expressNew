@@ -38,7 +38,7 @@ app.get("/", (req, res) => {
   // query database
   pool.query("SELECT * FROM tabelpertama", (error, results) => {
     if (error) {
-      throw error;
+      throw error; // throw mirip kayak return tapi lebih spesifik untuk erro handling
     }
     res.send(results.rows);
   });
