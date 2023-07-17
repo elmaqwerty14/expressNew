@@ -55,3 +55,7 @@ app.get("/", (req, res) => {
 app.listen(port, function () {
   console.log(`Example app listening on port ${port}`);
 });
+
+// NOTE : how to run file
+// npm run start : menjalankan key start -> node index.mjs
+// node index.mjs
