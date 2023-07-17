@@ -26,8 +26,10 @@
 // })
 
 const express = require("express");
+const {} = require('express'); // Cara lain import,  kalau mau tau file apa saja yang bisa di 
+                              //  --- import pake CTRL + SPASI
 
-const pool = require("./connection.js");
+const pool = require("./connection.js"); // require berarti pake comen js
 
 const app = express();
 const port = 3000;
