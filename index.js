@@ -43,32 +43,25 @@ const port = 3000
 // console.log(hello())
 
 app.get("/", (req, res) => {
-  // query database
-  let id=5;
-  pool.query("SELECT * FROM produk", (error, results) => {
-    if (error) {
-      throw error; // throw mirip kayak return tapi lebih spesifik untuk error handling
-    }
-    console.log(results);
-
-    // const data = results.rows.map(item =>{
-    //   return{
-    //     nama_produk: item.nama_produk,
-    //     harga_produk: Number(item.harga_produk * 2)
-    //   };
-    // });
-
-    const dataIni = results.rows.map;
-    dataIni.forEach(function(item) {
-      return{
+    // query database
+    let id = 5;
+    pool.query('SELECT * FROM produk', (error, results) => {
+      if (error) {
+        throw error;
+      }
+      console.log(results);
+  
+      const dataIni = [];
+      results.rows.forEach((item) => {
+        dataIni.push({
             nama_produk: item.nama_produk,
             harga_produk: Number(item.harga_produk * 2)
-          };
+        });
+      });
+  
+      res.send(dataIni);
     });
-    
-    res.send(dataIni);
   });
-});
 
 app.listen(port, function () {
   console.log(`Example app listening on port ${port}`);
