@@ -3,7 +3,8 @@ const {
     getBarang,
     postBarang,
     deleteBarang,
-    updateBarang
+    updateBarang,
+    getBarangByID
 } = require('./barang.service');
 
 const {
@@ -27,6 +28,15 @@ router.get('/', (req, res) => {
         statusCode: 200
     })
 });
+router.get('/:id', (req, res) => {
+    const id = req.params.id;
+    return res
+       .status(200)
+       .json({
+        data: getBarangByID(id),
+        statusCode: 200
+    })
+});
 router.post('/', (req, res) => {
     const input = req.body;
     return res
@@ -40,12 +50,15 @@ router.post('/', (req, res) => {
 
 router.patch('/:id', (req, res) => {
     const id = req.params.id;
+    const input = req.body;
+    
     return res
        .status(200)
        .json({
-        data: updateBarang(id),
+        data: updateBarang(id, input),
         statusCode: 200
-    })
+       }
+    );
 });
 
 router.delete('/:id', (req, res) => {

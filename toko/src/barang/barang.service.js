@@ -8,8 +8,18 @@ const getBarang = () => {
 }
 const getBarangByID = (id) => {
     const data = Barang;
-    data.find;
+    const findData = data.find((item) => {
+        if(item.id == id){
+            return item;
+        }
+    });
+    // console.log(findData)
+    if(!findData){
+        return null;
+    }
+    return findData;
 }
+
 
 const postBarang = (input) => {
     const data = Barang;
@@ -23,16 +33,41 @@ const postBarang = (input) => {
 
 
 
-const updateBarang = (id) => {
-    return `Ini Update Barang ${id}`;
+const updateBarang = (id, input) => {
+    const { 
+        nama,
+        stok
+    } = input;
+
+    const data = Barang;
+
+    const indexData = data.findIndex((item) => item.id == id);
+
+    if(indexData < 0){
+        return null;
+    }
+
+    data[indexData].nama = nama;
+    data[indexData].stok = stok;
+
+    return data;
 }
 
 const deleteBarang = (id) => {
-    return `Ini Delete Barang ${id}`;
+    const data = Barang;
+    const indexData = data.findIndex((item) => item.id == id);
+    if(indexData < 0){
+        return null;
+    }
+
+    // [1,2,3,4] splice jumlah data yang mau dihapus dari index
+    data.splice(indexData, 1);
+    return data;
 }
 
 module.exports = {
     getBarang,
+    getBarangByID,
     postBarang,
     deleteBarang,
     updateBarang
