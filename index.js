@@ -1,5 +1,6 @@
 const express = require('express');
 const pool = require('./connection.js');
+const bodyParser = require('body-parser');
 const app = express()
 const port = 3000
 
