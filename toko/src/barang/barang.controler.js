@@ -21,10 +21,11 @@ const router = Router();
 // });
 
 router.get('/', (req, res) => {
+    const queryParams = req.query;
     return res
        .status(200)
        .json({
-        data: getBarang(),
+        data: getBarang(queryParams),
         statusCode: 200
     })
 });

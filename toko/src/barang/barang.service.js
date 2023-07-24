@@ -1,10 +1,23 @@
+const { query } = require('express');
 const {
     Barang
 } = require('./barang.enttity');
 
-const getBarang = () => {
+const getBarang = (query) => {
     const data = Barang;
-    return data;
+    if(!query.hasOwnProperty("stok")){
+    // console.log("test");
+        return data;
+    }
+    console.log(data);
+    console.log(query);
+
+    const {
+        stok
+    } = query;
+
+    const filterData= data.filter((item) => item.stok == stok);
+    return filterData;
 }
 const getBarangByID = (id) => {
     const data = Barang;
