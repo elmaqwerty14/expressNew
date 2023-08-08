@@ -2,13 +2,13 @@ const express = require('express');
 const pool = require('./connection.js');
 const bodyParser = require('body-parser');
 const app = express()
-const port = 3000
+const port = 3001
 
 // app.get('/', (req, res) => {
 //   // query database
 //   pool.query('SELECT * FROM tabelpertama', (error, results) => {
 //     if (error) {
-//       throw error;
+//       throw error;un
 //     }
 //     res.send(results.rows);
 //   });

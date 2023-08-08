@@ -1,4 +1,6 @@
 const express = require('express');
+const pool = require('./koneksi.js');
+const port = 3000
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -23,5 +25,6 @@ app.use('/barang', barangRouter);
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
+
 
 module.exports = app;
