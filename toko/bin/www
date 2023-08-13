@@ -91,33 +91,3 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
-app.get('/barang', (req, res) => {
-  const result = getBarang(req.query); // Menggunakan query parameter
-  res.json(result);
-});
-
-app.get('/barang/:id', (req, res) => {
-  const id = req.params.id;
-  const result = getBarangByID(id);
-  res.json(result);
-});
-
-app.post('/barang', (req, res) => {
-  const input = req.body;
-  const result = postBarang(input);
-  res.json(result);
-});
-
-app.put('/barang/:id', (req, res) => {
-  const id = req.params.id;
-  const input = req.body;
-  const result = updateBarang(id, input);
-  res.json(result);
-});
-
-app.delete('/barang/:id', (req, res) => {
-  const id = req.params.id;
-  const result = deleteBarang(id);
-  res.json(result);
-});
-
