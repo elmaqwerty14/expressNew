@@ -5,20 +5,27 @@ const {
 
 const getBarang = (query) => {
     const data = Barang;
-    if(!query.hasOwnProperty("stok")){
-    // console.log("test");
-        return data;
+  
+    // Inisialisasi filterData dengan semua data
+    let filterData = data;
+  
+    if (query.hasOwnProperty('stok')) {
+      const { stok } = query;
+      
+      // Filter data berdasarkan stok jika query 'stok' ada
+      filterData = filterData.filter((item) => item.stok == stok);
     }
-    console.log(data);
-    console.log(query);
-
-    const {
-        stok
-    } = query;
-
-    const filterData= data.filter((item) => item.stok == stok);
+  
+    if (query.hasOwnProperty('nama')) {
+      const { nama } = query;
+  
+      // Filter data berdasarkan nama jika query 'nama' ada
+      filterData = filterData.filter((item) => item.nama.toLowerCase().includes(nama.toLowerCase()));
+    }
+  
     return filterData;
-}
+  }
+  
 const getBarangByID = (id) => {
     const data = Barang;
     const findData = data.find((item) => {

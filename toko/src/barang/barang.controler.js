@@ -20,15 +20,30 @@ const router = Router();
 //     }, 200)
 // });
 
-router.get('/', (req, res) => {
+router.get('/barang', (req, res) => {
     const queryParams = req.query;
-    return res
-       .status(200)
-       .json({
-        data: getBarang(queryParams),
-        statusCode: 200
-    })
-});
+  
+    // Ambil data dari service
+    const allItems = getBarang();
+  
+    // Filter pencarian berdasarkan parameter query
+    if (queryParams.nama) {
+      const filteredItems = allItems.filter((item) =>
+        item.nama.toLowerCase().includes(queryParams.nama.toLowerCase())
+      );
+      return res.status(200).json({
+        data: filteredItems,
+        statusCode: 200,
+      });
+    }
+  
+    // Jika tidak ada filter, kirim semua data
+    return res.status(200).json({
+      data: allItems,
+      statusCode: 200,
+    });
+  });
+
 router.get('/:id', (req, res) => {
     const id = req.params.id;
     return res

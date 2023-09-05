@@ -2,7 +2,7 @@ const express = require('express');
 const pool = require('./connection.js');
 const bodyParser = require('body-parser');
 const app = express()
-const port = 3001
+const port = 3000
 
 // app.get('/', (req, res) => {
 //   // query database

@@ -9,6 +9,16 @@ const Barang = [
         nama: "Crayon",
         stok: 100
     },
+    {
+        id: 3,
+        nama: "Buku",
+        stok: 1000
+    },
+    {
+        id: 4,
+        nama: "Mouse",
+        stok: 1000
+    },
     
 ];
 
