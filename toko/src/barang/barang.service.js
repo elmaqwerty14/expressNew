@@ -1,7 +1,4 @@
-const { query } = require('express');
-const {
-    Barang
-} = require('./barang.enttity');
+const { Barang } = require('./barang.enttity');
 
 const getBarang = (query) => {
     const data = Barang;
@@ -24,22 +21,20 @@ const getBarang = (query) => {
     }
   
     return filterData;
-  }
-  
+}
+
 const getBarangByID = (id) => {
     const data = Barang;
     const findData = data.find((item) => {
-        if(item.id == id){
+        if (item.id == id) {
             return item;
         }
     });
-    // console.log(findData)
-    if(!findData){
+    if (!findData) {
         return null;
     }
     return findData;
 }
-
 
 const postBarang = (input) => {
     const data = Barang;
@@ -51,8 +46,6 @@ const postBarang = (input) => {
     return data;
 }
 
-
-
 const updateBarang = (id, input) => {
     const { 
         nama,
@@ -63,7 +56,7 @@ const updateBarang = (id, input) => {
 
     const indexData = data.findIndex((item) => item.id == id);
 
-    if(indexData < 0){
+    if (indexData < 0) {
         return null;
     }
 
@@ -76,11 +69,11 @@ const updateBarang = (id, input) => {
 const deleteBarang = (id) => {
     const data = Barang;
     const indexData = data.findIndex((item) => item.id == id);
-    if(indexData < 0){
+    if (indexData < 0) {
         return null;
     }
 
-    // [1,2,3,4] splice jumlah data yang mau dihapus dari index
+    // Menghapus satu elemen dari array menggunakan splice
     data.splice(indexData, 1);
     return data;
 }

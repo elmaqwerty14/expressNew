@@ -13,18 +13,11 @@ const {
 
 const router = Router();
 
-// router.get('/', (req, res) => {
-//     return res.json({
-//         data: getBarang(),
-//         statusCode: 200
-//     }, 200)
-// });
-
-router.get('/barang', (req, res) => {
+router.get('/', (req, res) => {
     const queryParams = req.query;
   
-    // Ambil data dari service
-    const allItems = getBarang();
+    // Memanggil getBarang dengan objek query sebagai parameter
+    const allItems = getBarang(queryParams);
   
     // Filter pencarian berdasarkan parameter query
     if (queryParams.nama) {
@@ -86,8 +79,5 @@ router.delete('/:id', (req, res) => {
         statusCode: 200
     })
 });
-
-
-
 
 module.exports = router;
