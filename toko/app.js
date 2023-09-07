@@ -1,6 +1,6 @@
 const express = require('express');
 const pool = require('./koneksi.js');
-const port = 3000
+const port = 3001
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
