@@ -33,22 +33,29 @@ server.listen(port, ()=> {
 server.on('error', onError);
 server.on('listening', onListening);
 
-function handleError(error){
-  if(error) {
-    console.error("Error connecting to database: "+ error)
-  }
-}
-pool.connect(handleError);
+//Elma
+//function handleError(error){
+//  if(error) {
+//    console.error("Error connecting to database: "+ error)
+//  }
+//}
+//pool.connect(handleError);
+
+//Ornensya
+// pool.connect((error) => {
+//   if (error) {
+//     console.error("Error connecting to database: " + error);
+//   }
+// });
 
 
+// function customCallback(req, res) {
+//   // Your custom logic here
+//   // You can access the request object (req) and send a response (res)
+//   res.send(`This is a custom callback!`);
+// }
 
-function customCallback(req, res) {
-  // Your custom logic here
-  // You can access the request object (req) and send a response (res)
-  res.send(`This is a custom callback!`);
-}
-
-app.get('/callback', customCallback);
+// app.get('/callback', customCallback);
 
 /**
  * Normalize a port into a number, string, or false.

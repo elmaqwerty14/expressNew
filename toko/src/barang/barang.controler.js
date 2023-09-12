@@ -22,13 +22,32 @@ router.get('/', (req, res) => {
     // Filter pencarian berdasarkan parameter query
     if (queryParams.nama) {
       const filteredItems = allItems.filter((item) =>
-        item.nama.toLowerCase().includes(queryParams.nama.toLowerCase())
+        item.nama.toLowerCase().includes(queryParams.nama.toLowerCase()) //LOWER CASE HURUF KECIL 
+        // UPPERCASE HURUF BESAR
       );
       return res.status(200).json({
         data: filteredItems,
         statusCode: 200,
       });
     }
+
+    //KEYS PROPERTI OBJECT ITU SAMA SAJA DI JS
+    /*Metode Object.keys () dalam JavaScript mengembalikan array yang elemennya berupa string yang sesuai 
+    dengan properti enumerable
+    PENGGUNAANNYA : 
+    let userDetails = {
+      name: "John Doe",
+      username: "jonnydoe",
+      age: 14
+    };
+
+    let myEmptyObj = {};
+
+    console.log(Object.keys(userDetails).length); // 3
+    console.log(Object.keys(myEmptyObj).length); // 0
+    
+    */
+
   
     // Jika tidak ada filter, kirim semua data
     return res.status(200).json({
