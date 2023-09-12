@@ -65,6 +65,19 @@ app.post("/gabung", (req, res) => {
   });
 });
 
+function doSomethingAsync(callback) {
+  setTimeout(function() {
+    const hasil = "Tugas selesai.";
+    callback(hasil);
+  }, 1000);
+}
+
+app.post("/sesuatu", (req, res) => {
+  doSomethingAsync((hasil) => {
+    res.json({ result: hasil }); 
+  });
+});
+
 
 app.use("/", indexRouter);
 app.use("/barang", barangRouter);
