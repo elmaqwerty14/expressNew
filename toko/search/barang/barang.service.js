@@ -3,6 +3,7 @@ const {
   Router
 } = require('express');
 
+const client = require('../../koneksi.js');
 const router = Router();
 // Rute untuk menjalankan kueri ke database
 router.get('/queryDatabase', (req, res) => {
@@ -78,3 +79,4 @@ router.delete('/deleteProduct/:id', (req, res) => {
     });
 });
 
+module.exports = router;

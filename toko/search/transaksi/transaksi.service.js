@@ -72,4 +72,4 @@ router.delete('/deleteTransaksi/:id', (req, res) => {
       });
   });
 
-
+  module.exports = router;

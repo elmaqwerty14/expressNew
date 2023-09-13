@@ -78,3 +78,4 @@ router.put('/editProduct/:id', (req, res) => {
     });
 });
 
+module.exports = router;
