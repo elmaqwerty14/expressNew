@@ -3,6 +3,7 @@ const {
   Router
 } = require('express');
 
+const client = require('../../koneksi.js');
 const router = Router();
 router.get('/queryDatabaseUser', (req, res) => {
   client.query('SELECT * FROM user')  // Use double quotes around "user"

@@ -3,6 +3,7 @@ const {
   Router
 } = require('express');
 
+const client = require('../../koneksi.js');
 const router = Router();
 // Rute untuk menjalankan kueri ke database
 router.get('/queryDatabaseCart', (req, res) => {
