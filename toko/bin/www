@@ -14,7 +14,7 @@ const { error } = require("console");
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3001');
+var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
@@ -41,14 +41,14 @@ function handleError(error){
 }
 pool.connect(handleError);
 
-pool.query('SELECT * FROM produk')
-  .then(result => {
-    // Lakukan sesuatu dengan hasil kueri di sini
-    console.log(result.rows);
-  })
-  .catch(err => {
-    console.error('Kesalahan saat menjalankan kueri', err);
-  });
+// pool.query('SELECT * FROM produk')
+//   .then(result => {
+//     // Lakukan sesuatu dengan hasil kueri di sini
+//     console.log(result.rows);
+//   })
+//   .catch(err => {
+//     console.error('Kesalahan saat menjalankan kueri', err);
+//   });
 
 
 //Ornensya

@@ -1,12 +1,17 @@
-const { Pool } = require('pg');
+const { Client } = require('pg');
 
-// Konfigurasi koneksi database
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'db_ekatakog',
-  password: 'ELMAKIU14042002',
-  port: 5433, // Port default PostgreSQL
+const client = new Client({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'db_ekatakog',
+    password: 'ELMAKIU14042002',
+    port: 5433, // Port default PostgreSQL
 });
+client.connect(handleError);
 
-module.exports = pool;
+function handleError(error) {
+  if (error) {
+    console.error('Error connecting to database: ' + error);
+  }
+}
+module.exports = client;

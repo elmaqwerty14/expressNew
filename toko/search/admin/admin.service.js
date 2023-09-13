@@ -1,6 +1,6 @@
 const client = require('../../koneksiClient.js');
 const express = require("express");
-const port = 3001;
+const port = 3000;
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
@@ -16,10 +16,19 @@ function handleError(error) {
     console.error('Error connecting to database: ' + error);
   }
 }
+//   client.query('SELECT * FROM produk')
+//     .then(result => {
+//       // Lakukan sesuatu dengan hasil kueri di sini
+//       console.log(result.rows);
+//     })
+//     .catch(err => {
+//       console.error('Kesalahan saat menjalankan kueri', err);
+//     });
+
 
 // Rute untuk menjalankan kueri ke database
 app.get('/queryDatabase', (req, res) => {
-    client.query('SELECT * FROM produk')
+    client.query('SELECT * FROM admin')
       .then(result => {
         res.json(result.rows);
       })
@@ -29,13 +38,13 @@ app.get('/queryDatabase', (req, res) => {
       });
   });
 
-  app.post('/insertProduct', (req, res) => {
-    const { nama_produk, harga_produk, stok_produk } = req.body;
+  app.post('/insertAdmin', (req, res) => {
+    const { ussername, password } = req.body;
 
   
     const query = {
-      text: 'INSERT INTO produk (nama_produk, harga_produk, stok_produk) VALUES ($1, $2, $3)',
-      values: [nama_produk, harga_produk, stok_produk],
+      text: 'INSERT INTO produk (ussername, password) VALUES ($1, $2)',
+      values: [ussername, password],
     };
   
     client.query(query)
@@ -50,14 +59,14 @@ app.get('/queryDatabase', (req, res) => {
 
 // Rute untuk mengedit data dalam tabel barang
 app.put('/editProduct/:id', (req, res) => {
-    const { nama_produk, harga_produk, stok_produk } = req.body;
-    const id_produk = req.params.id; // Ambil ID produk dari parameter URL
+    const { ussername, password } = req.body;
+    const id_admin = req.params.id; // Ambil ID produk dari parameter URL
   
     // Lakukan validasi data jika diperlukan
   
     const query = {
-      text: 'UPDATE produk SET nama_produk = $1, harga_produk = $2, stok_produk = $3 WHERE id_produk = $4',
-      values: [nama_produk, harga_produk, stok_produk, id_produk],
+      text: 'UPDATE produk SET ussername = $1, password = $2 WHERE id_admin = $3',
+      values: [ussername, password, id_admin],
     };
   
     client.query(query)
@@ -70,15 +79,15 @@ app.put('/editProduct/:id', (req, res) => {
       });
   });
   
-  // Rute untuk menghapus produk berdasarkan ID
-app.delete('/deleteProduct/:id', (req, res) => {
-  const id_produk = req.params.id; // Ambil ID produk dari parameter URL
+ // Rute untuk menghapus produk berdasarkan ID
+ app.delete('/deleteAdmin/:id', (req, res) => {
+  const id_admin = req.params.id; // Ambil ID produk dari parameter URL
 
   // Lakukan validasi data jika diperlukan
 
   const query = {
-    text: 'DELETE FROM produk WHERE id_produk = $1',
-    values: [id_produk],
+    text: 'DELETE FROM admin WHERE id_admin = $1',
+    values: [id_admin],
   };
 
   client.query(query)
@@ -92,5 +101,6 @@ app.delete('/deleteProduct/:id', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+    console.log(`Server is running on port ${port}`);
 });
+

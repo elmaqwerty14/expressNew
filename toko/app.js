@@ -11,6 +11,11 @@ const barangRouter = require("./src/barang/barang.controler");
 const transaksiRouter = require("./src/transaksi/transaksi.controler");
 const userRouter = require("./src/user/user.controler");
 const cartRouter = require("./src/cart/cart.controler");
+const barangNewRouter = require("./search/barang/barang.service");
+const transaksiNewRouter = require("./search/transaksi/transaksi.service");
+const userNewRouter = require("./search/user/user.service");
+const adminNewRouter = require("./search/admin/admin.service");
+const cartNewRouter = require("./search/cart/cart.service");
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -39,12 +44,8 @@ function operasiDuaAngka(angka1, angka2, fungsiOperasiAngka) {
 
 app.post("/kuadrat", (req, res) => {
   const { angka1, angka2 } = req.body;
-  const hasilKali = operasiDuaAngka(
-    angka1,
-    angka2,
-    (angka1, angka2) => angka1 * angka2
-  );
-  res.json(hasilKali);
+  const hasilKuadrat = angka1 ** angka2;
+  res.json({ result: hasilKuadrat });
 });
 
 // Fungsi untuk menggabungkan dua string
@@ -84,6 +85,11 @@ app.use("/barang", barangRouter);
 app.use("/transaksi", transaksiRouter);
 app.use("/user", userRouter);
 app.use("/cart", cartRouter);
+app.use("/barangNew", barangNewRouter);
+app.use("/transaksiNew", transaksiNewRouter);
+app.use("/userNew", userNewRouter);
+app.use("/adminNew", adminNewRouter);
+app.use("/cartNew", cartNewRouter);
 // app.get("/calback")
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);

@@ -1,87 +1,85 @@
-const { query } = require('express');
-const {
-    Transaksi
-} = require('./transaksi.enttity');
+const client = require('../../koneksiClient.js');
+const express = require("express");
+const port = 3003;
+const bodyParser = require("body-parser");
 
-const getTransaksi = (query) => {
-    const data = Transaksi;
-    if(!query.hasOwnProperty("jmlh_produk")){
-    // console.log("test");
-        return data;
-    }
-    console.log(data);
-    console.log(query);
+const app = express();
+app.use(bodyParser.json());
 
-    const {
-        jmlh_produk
-    } = query;
+client.connect((error) => {
+  if (error) {
+    console.error('Error connecting to database: ' + error);
+  }
+});
 
-    const filterData= data.filter((item) => item.jmlh_produk == jmlh_produk);
-    return filterData;
-}
-const getTransaksiByID = (id) => {
-    const data = Transaksi;
-    const findData = data.find((item) => {
-        if(item.id == id){
-            return item;
-        }
+app.get('/queryDatabaseTransaksi', (req, res) => {
+  client.query('SELECT * FROM transaksi')  // Use double quotes around "user"
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => {
+      console.error('Error querying the database', err);
+      res.status(500).json({ error: 'Error querying the database' });
     });
-    console.log(findData)
-    if(!findData){
-        return null;
-    }
-    return findData;
-}
+});
 
+app.post('/insertTransaksi', (req, res) => {
+  const { jumlah_produk, total_harga } = req.body;
 
-const postTransaksi = (input) => {
-    const data = Transaksi;
-    data.push({
-        id: input.id,
-        nama_produk: input.nama_produk,
-        jmlh_produk: input.jmlh_produk
+  const query = {
+    text: 'INSERT INTO transaksi (jumlah_produk, total_harga) VALUES ($1, $2)', 
+    values: [jumlah_produk, total_harga],
+  };
+
+  client.query(query)
+    .then(() => {
+      console.log('Data inserted successfully');
+      res.status(201).json({ message: 'Data berhasil ditambahkan' });
+    })
+    .catch(err => {
+      console.error('Error inserting data:', err);
+      res.status(500).json({ error: 'Error inserting data' });
     });
-    return data;
-}
+});
 
+app.put('/editTransaksi/:id', (req, res) => {
+  const { jumlah_produk, total_harga } = req.body;
+  const id_transaksi = req.params.id;
 
+  const query = {
+    text: 'UPDATE transaksi SET jumlah_produk = $1, total_harga = $2 WHERE id_transaksi = $3',  // Use double quotes around "user"
+    values: [jumlah_produk, total_harga, id_transaksi],
+  };
 
-const updateTransaksi = (id, input) => {
-    const { 
-        nama_produk,
-        jmlh_produk
-    } = input;
+  client.query(query)
+    .then(() => {
+      res.json({ message: 'Data berhasil diubah' });
+    })
+    .catch(err => {
+      console.error('Error editing data', err);
+      res.status(500).json({ error: 'Error editing data' });
+    });
+});
 
-    const data = Transaksi;
+ // Rute untuk menghapus produk berdasarkan ID
+ app.delete('/deleteTransaksi/:id', (req, res) => {
+    const id_transaksi = req.params.id; 
+  
+    const query = {
+      text: 'DELETE FROM transaksi WHERE id_transaksi = $1',
+      values: [id_transaksi],
+    };
+  
+    client.query(query)
+      .then(() => {
+        res.json({ message: 'Data berhasil dihapus' });
+      })
+      .catch(err => {
+        console.error('Kesalahan saat menghapus data', err);
+        res.status(500).json({ error: 'Kesalahan saat menghapus data' });
+      });
+  });
 
-    const indexData = data.findIndex((item) => item.id == id);
-
-    if(indexData < 0){
-        return null;
-    }
-
-    data[indexData].nama_produk = nama_produk;
-    data[indexData].jmlh_produk = jmlh_produk;
-
-    return data;
-}
-
-const deleteTransaksi = (id) => {
-    const data = Transaksi;
-    const indexData = data.findIndex((item) => item.id == id);
-    if(indexData < 0){
-        return null;
-    }
-
-    // [1,2,3,4] splice jumlah data yang mau dihapus dari index
-    data.splice(indexData, 1);
-    return data;
-}
-
-module.exports = {
-    getTransaksi,
-    getTransaksiByID,
-    postTransaksi,
-    deleteTransaksi,
-    updateTransaksi
-};
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
