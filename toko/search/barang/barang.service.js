@@ -1,24 +1,11 @@
-const client = require('../../koneksiClient.js');
-const express = require("express");
-const port = 3001;
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const logger = require("morgan");
-const bodyParser = require("body-parser");
+const { json } = require('body-parser');
+const {
+  Router
+} = require('express');
 
-const app = express();
-app.use(bodyParser.json());
-  
-client.connect(handleError);
-
-function handleError(error) {
-  if (error) {
-    console.error('Error connecting to database: ' + error);
-  }
-}
-
+const router = Router();
 // Rute untuk menjalankan kueri ke database
-app.get('/queryDatabase', (req, res) => {
+router.get('/queryDatabase', (req, res) => {
     client.query('SELECT * FROM produk')
       .then(result => {
         res.json(result.rows);
@@ -29,7 +16,7 @@ app.get('/queryDatabase', (req, res) => {
       });
   });
 
-  app.post('/insertProduct', (req, res) => {
+  router.post('/insertProduct', (req, res) => {
     const { nama_produk, harga_produk, stok_produk } = req.body;
 
   
@@ -49,7 +36,7 @@ app.get('/queryDatabase', (req, res) => {
   });
 
 // Rute untuk mengedit data dalam tabel barang
-app.put('/editProduct/:id', (req, res) => {
+router.put('/editProduct/:id', (req, res) => {
     const { nama_produk, harga_produk, stok_produk } = req.body;
     const id_produk = req.params.id; // Ambil ID produk dari parameter URL
   
@@ -71,7 +58,7 @@ app.put('/editProduct/:id', (req, res) => {
   });
   
   // Rute untuk menghapus produk berdasarkan ID
-app.delete('/deleteProduct/:id', (req, res) => {
+router.delete('/deleteProduct/:id', (req, res) => {
   const id_produk = req.params.id; // Ambil ID produk dari parameter URL
 
   // Lakukan validasi data jika diperlukan
@@ -91,6 +78,3 @@ app.delete('/deleteProduct/:id', (req, res) => {
     });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});

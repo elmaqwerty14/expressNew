@@ -1,18 +1,10 @@
-const client = require('../../koneksiClient.js');
-const express = require("express");
-const port = 3003;
-const bodyParser = require("body-parser");
+const { json } = require('body-parser');
+const {
+  Router
+} = require('express');
 
-const app = express();
-app.use(bodyParser.json());
-
-client.connect((error) => {
-  if (error) {
-    console.error('Error connecting to database: ' + error);
-  }
-});
-
-app.get('/queryDatabaseTransaksi', (req, res) => {
+const router = Router();
+router.get('/queryDatabaseTransaksi', (req, res) => {
   client.query('SELECT * FROM transaksi')  // Use double quotes around "user"
     .then(result => {
       res.json(result.rows);
@@ -23,7 +15,7 @@ app.get('/queryDatabaseTransaksi', (req, res) => {
     });
 });
 
-app.post('/insertTransaksi', (req, res) => {
+router.post('/insertTransaksi', (req, res) => {
   const { jumlah_produk, total_harga } = req.body;
 
   const query = {
@@ -42,7 +34,7 @@ app.post('/insertTransaksi', (req, res) => {
     });
 });
 
-app.put('/editTransaksi/:id', (req, res) => {
+router.put('/editTransaksi/:id', (req, res) => {
   const { jumlah_produk, total_harga } = req.body;
   const id_transaksi = req.params.id;
 
@@ -62,7 +54,7 @@ app.put('/editTransaksi/:id', (req, res) => {
 });
 
  // Rute untuk menghapus produk berdasarkan ID
- app.delete('/deleteTransaksi/:id', (req, res) => {
+router.delete('/deleteTransaksi/:id', (req, res) => {
     const id_transaksi = req.params.id; 
   
     const query = {
@@ -80,6 +72,4 @@ app.put('/editTransaksi/:id', (req, res) => {
       });
   });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+

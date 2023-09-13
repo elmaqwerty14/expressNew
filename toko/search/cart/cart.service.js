@@ -1,33 +1,11 @@
-const client = require('../../koneksiClient.js');
-const express = require("express");
-const port = 3000;
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const logger = require("morgan");
-const bodyParser = require("body-parser");
+const { json } = require('body-parser');
+const {
+  Router
+} = require('express');
 
-const app = express();
-app.use(bodyParser.json());
-  
-client.connect(handleError);
-
-function handleError(error) {
-  if (error) {
-    console.error('Error connecting to database: ' + error);
-  }
-}
-//   client.query('SELECT * FROM keranjang')
-//     .then(result => {
-//       // Lakukan sesuatu dengan hasil kueri di sini
-//       console.log(result.rows);
-//     })
-//     .catch(err => {
-//       console.error('Kesalahan saat menjalankan kueri', err);
-//     });
-
-
+const router = Router();
 // Rute untuk menjalankan kueri ke database
-app.get('/queryDatabaseCart', (req, res) => {
+router.get('/queryDatabaseCart', (req, res) => {
     client.query('SELECT * FROM keranjang')
       .then(result => {
         res.json(result.rows);
@@ -38,7 +16,7 @@ app.get('/queryDatabaseCart', (req, res) => {
       });
   });
 
-  app.post('/insertCart', (req, res) => {
+  router.post('/insertCart', (req, res) => {
     const { nama_produk, jumlah_produk, harga_produk } = req.body;
 
   
@@ -58,7 +36,7 @@ app.get('/queryDatabaseCart', (req, res) => {
   });
 
 // Rute untuk mengedit data dalam tabel barang
-app.put('/editCart/:id', (req, res) => {
+router.put('/editCart/:id', (req, res) => {
     const { nama_produk, jumlah_produk, harga_produk } = req.body;
     const id_keranjang = req.params.id; // Ambil ID keranjang dari parameter URL
   
@@ -80,7 +58,7 @@ app.put('/editCart/:id', (req, res) => {
   });
   
  // Rute untuk menghapus produk berdasarkan ID
- app.delete('/deleteCart/:id', (req, res) => {
+ router.delete('/deleteCart/:id', (req, res) => {
     const id_keranjang = req.params.id; // Ambil ID produk dari parameter URL
   
     // Lakukan validasi data jika diperlukan
@@ -100,7 +78,5 @@ app.put('/editCart/:id', (req, res) => {
       });
   });
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+
 

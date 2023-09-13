@@ -1,18 +1,10 @@
-const client = require('../../koneksiClient.js');
-const express = require("express");
-const port = 3003;
-const bodyParser = require("body-parser");
+const { json } = require('body-parser');
+const {
+  Router
+} = require('express');
 
-const app = express();
-app.use(bodyParser.json());
-
-client.connect((error) => {
-  if (error) {
-    console.error('Error connecting to database: ' + error);
-  }
-});
-
-app.get('/queryDatabaseUser', (req, res) => {
+const router = Router();
+router.get('/queryDatabaseUser', (req, res) => {
   client.query('SELECT * FROM "user"')  // Use double quotes around "user"
     .then(result => {
       res.json(result.rows);
@@ -23,7 +15,7 @@ app.get('/queryDatabaseUser', (req, res) => {
     });
 });
 
-app.post('/insertUser', (req, res) => {
+router.post('/insertUser', (req, res) => {
   const { nama_pembeli, token_user } = req.body;
 
   const query = {
@@ -42,7 +34,7 @@ app.post('/insertUser', (req, res) => {
     });
 });
 
-app.put('/editUser/:id', (req, res) => {
+router.put('/editUser/:id', (req, res) => {
   const { nama_pembeli, token_user } = req.body;
   const id_pembeli = req.params.id;
 
@@ -62,7 +54,7 @@ app.put('/editUser/:id', (req, res) => {
 });
 
  // Rute untuk menghapus produk berdasarkan ID
- app.delete('/deleteUser/:id', (req, res) => {
+ router.delete('/deleteUser/:id', (req, res) => {
   const id_pembeli = req.params.id; // Ambil ID produk dari parameter URL
 
   // Lakukan validasi data jika diperlukan
@@ -82,6 +74,3 @@ app.put('/editUser/:id', (req, res) => {
     });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});

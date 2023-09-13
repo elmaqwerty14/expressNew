@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const pool = require("../koneksi.js");
+const client = require("../koneksi.js");
 /**
  * Module dependencies.
  */
@@ -39,9 +39,9 @@ function handleError(error){
    console.error("Error connecting to database: "+ error)
  }
 }
-pool.connect(handleError);
+client.connect(handleError);
 
-// pool.query('SELECT * FROM produk')
+// client.query('SELECT * FROM produk')
 //   .then(result => {
 //     // Lakukan sesuatu dengan hasil kueri di sini
 //     console.log(result.rows);
@@ -52,7 +52,7 @@ pool.connect(handleError);
 
 
 //Ornensya
-// pool.connect((error) => {
+// client.connect((error) => {
 //   if (error) {
 //     console.error("Error connecting to database: " + error);
 //   }
