@@ -6,7 +6,7 @@ const {
 const client = require('../../koneksi.js');
 const router = Router();
 router.get('/queryDatabaseUser', (req, res) => {
-  client.query('SELECT * FROM user')  // Use double quotes around "user"
+  client.query('SELECT * FROM "user"')  
     .then(result => {
       res.json(result.rows);
     })
@@ -20,7 +20,7 @@ router.post('/insertUser', (req, res) => {
   const { nama_pembeli, token_user } = req.body;
 
   const query = {
-    text: 'INSERT INTO user (nama_pembeli, token_user) VALUES ($1, $2)',  // Use double quotes around "user"
+    text: 'INSERT INTO "user" (nama_pembeli, token_user) VALUES ($1, $2)', 
     values: [nama_pembeli, token_user],
   };
 
@@ -40,7 +40,7 @@ router.put('/editUser/:id', (req, res) => {
   const id_pembeli = req.params.id;
 
   const query = {
-    text: 'UPDATE user SET nama_pembeli = $1, token_user = $2 WHERE id_pembeli = $3', 
+    text: 'UPDATE "user" SET nama_pembeli = $1, token_user = $2 WHERE id_pembeli = $3', 
     values: [nama_pembeli, token_user, id_pembeli],
   };
 
@@ -61,7 +61,7 @@ router.put('/editUser/:id', (req, res) => {
   // Lakukan validasi data jika diperlukan
 
   const query = {
-    text: 'DELETE FROM user WHERE id_pembeli = $1',
+    text: 'DELETE FROM "user" WHERE id_pembeli = $1',
     values: [id_pembeli],
   };
 
@@ -80,7 +80,7 @@ router.post('/registerUser', (req, res) => {
 
   // Periksa apakah nama_pembeli atau token_user sudah terdaftar sebelumnya
   const checkQuery = {
-    text: 'SELECT * FROM user WHERE nama_pembeli = $1 OR token_user = $2',
+    text: 'SELECT * FROM "user" WHERE nama_pembeli = $1 OR token_user = $2',
     values: [nama_pembeli, token_user],
   };
 
@@ -90,16 +90,16 @@ router.post('/registerUser', (req, res) => {
         // Jika nama_pembeli atau token_user sudah terdaftar, kirim respons error
         res.status(400).json({ error: 'Nama pengguna atau token sudah terdaftar' });
       } else {
-        // Jika tidak ada nama_pembeli atau token_user yang sama, lakukan penyisipan
+        // Jika tidak ada nama_pembeli atau token_user yang sama, maka proses dilanjutkan
         const insertQuery = {
-          text: 'INSERT INTO user (nama_pembeli, token_user) VALUES ($1, $2)',
+          text: 'INSERT INTO "user" (nama_pembeli, token_user) VALUES ($1, $2)',
           values: [nama_pembeli, token_user],
         };
 
         client.query(insertQuery)
           .then(() => {
-            console.log('Pengguna berhasil terdaftar');
-            res.status(201).json({ message: 'Pengguna berhasil terdaftar' });
+            console.log('Pendaftaran akun sukses silahkan login kembali');
+            res.status(201).json({ message: 'Pendaftaran akun sukses silahkan login kembali' });
           })
           .catch(err => {
             console.error('Kesalahan saat mendaftarkan pengguna:', err);
@@ -110,6 +110,35 @@ router.post('/registerUser', (req, res) => {
     .catch(err => {
       console.error('Kesalahan saat memeriksa pengguna yang sudah terdaftar:', err);
       res.status(500).json({ error: 'Kesalahan saat memeriksa pengguna yang sudah terdaftar' });
+    });
+});
+
+// Route login user
+router.post('/loginUser', (req, res) => {
+  const { nama_pembeli, token_user } = req.body;
+
+  // Periksa apakah nama_pembeli atau token_user sudah terdaftar sebelumnya
+  const loginQuery = {
+    text: 'SELECT * FROM "user" WHERE nama_pembeli = $1 AND token_user = $2',
+    values: [nama_pembeli, token_user],
+  };
+
+  client.query(loginQuery)
+    .then(result => {
+      if (result.rows.length === 1) {
+        // // Login Berhasil
+        // res.status(200).json({ message: 'Anda berhasil Login'});
+         // Login Berhasil
+         const user = result.rows[0]; 
+         res.status(200).json({ message: 'Anda berhasil Login', user });
+      } else {
+        // User authentication failed
+        res.status(401).json({ error: 'Proses Login Gagal, silahkan login kembali.' });
+      }
+    })
+    .catch(err => {
+      console.error('Error saat Login:', err);
+      res.status(500).json({ error: 'Error saat Login' });
     });
 });
 
