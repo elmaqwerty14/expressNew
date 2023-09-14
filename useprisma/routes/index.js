@@ -4,7 +4,7 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-/* GET home page. */
+
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
@@ -23,10 +23,10 @@ router.get('/barang', async (req, res) => {
   });
   const data = barang.map((item) => {
     return {
-      id: Number(item.id), // Convert BigInt to number
+      id: Number(item.id),
       nama: item.nama,
-      harga: Number(item.harga), // Convert BigInt to number
-      stok: Number(item.stok), // Convert BigInt to number
+      harga: Number(item.harga),
+      stok: Number(item.stok),
     }
   });
   return res.status(200).json({
