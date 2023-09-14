@@ -126,11 +126,11 @@ router.post('/loginUser', (req, res) => {
   client.query(loginQuery)
     .then(result => {
       if (result.rows.length === 1) {
-        // // Login Berhasil
-        // res.status(200).json({ message: 'Anda berhasil Login'});
-         // Login Berhasil
-         const user = result.rows[0]; 
-         res.status(200).json({ message: 'Anda berhasil Login', user });
+        // Login Berhasil
+        res.status(200).json({ message: 'Anda berhasil Login'});
+        //  // Login Berhasil
+        //  const user = result.rows[0]; 
+        //  res.status(200).json({ message: 'Anda berhasil Login', user });
       } else {
         // User authentication failed
         res.status(401).json({ error: 'Proses Login Gagal, silahkan login kembali.' });
