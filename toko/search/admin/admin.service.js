@@ -5,6 +5,7 @@ const {
 
 const client = require('../../koneksi.js');
 const router = Router();
+
 // Rute untuk menjalankan kueri ke database
 router.get('/queryDatabase', (req, res) => {
     client.query('SELECT * FROM admin')
@@ -37,7 +38,7 @@ router.get('/queryDatabase', (req, res) => {
   });
 
 // Rute untuk mengedit data dalam tabel barang
-router.put('/editProduct/:id', (req, res) => {
+router.put('/editAdmin/:id', (req, res) => {
     const { ussername, password } = req.body;
     const id_admin = req.params.id; // Ambil ID produk dari parameter URL
   

@@ -55,7 +55,7 @@ router.put('/editUser/:id', (req, res) => {
 });
 
  // Rute untuk menghapus produk berdasarkan ID
- router.delete('/deleteUser/:id', (req, res) => {
+router.delete('/deleteUser/:id', (req, res) => {
   const id_pembeli = req.params.id; // Ambil ID produk dari parameter URL
 
   // Lakukan validasi data jika diperlukan
@@ -140,7 +140,7 @@ router.post('/loginUser', (req, res) => {
       console.error('Error saat Login:', err);
       res.status(500).json({ error: 'Error saat Login' });
     });
-});
+}); 
 
 
 module.exports = router;
