@@ -9,30 +9,116 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+// router.get('/barang', async (req, res) => {
+
+//   const barang = await prisma.barang.findMany({
+//     select: {
+//       id: true,
+//       nama: true,
+//       harga: true,
+//       stok: true
+//     },
+//     orderBy: {
+//       id: 'asc'
+//     }
+//   });
+//   const data = barang.map((item) => {
+//     return {
+//       id: Number(item.id),
+//       nama: item.nama,
+//       harga: Number(item.harga),
+//       stok: Number(item.stok),
+//     }
+//   });
+//   return res.status(200).json({
+//     data
+//   });
+// });
+
 router.get('/barang', async (req, res) => {
-  const barang = await prisma.barang.findMany({
+  const {
+    search
+  } = req.query
+
+  if(search){
+  barang = await prisma.barang.findMany({
     select: {
       id: true,
       nama: true,
       harga: true,
       stok: true
     },
+    where : {
+      nama:{
+        startsWith: `${search}`,
+        mode: 'insensitive'
+      }
+    },
     orderBy: {
       id: 'asc'
     }
   });
-  const data = barang.map((item) => {
-    return {
-      id: Number(item.id),
-      nama: item.nama,
-      harga: Number(item.harga),
-      stok: Number(item.stok),
-    }
+}else{
+    barang = await prisma.barang.findMany({
+      select: {
+        id: true,
+        nama: true,
+        harga: true,
+        stok: true,
+      },
+      orderBy: {
+        id: 'asc'
+      }
+    });
+  }
+
+const data = barang.map((item) => {
+      return {
+        id: Number(item.id),
+        nama: item.nama,
+        harga: Number(item.harga),
+        stok: Number(item.stok),
+      }
+    });
+    return res.status(200).json({
+      data
+    });
   });
+
+
+
+
+
+router.get('/barang/:id', async (req, res) => {
+  const { id } = req.params; // Mengambil ID dari parameter URL
+
+  const barangById = await prisma.barang.findUnique({
+    where: { id: parseInt(id) }, // Menggunakan parseInt karena ID biasanya berupa angka
+    select: {
+      id: true,
+      nama: true,
+      harga: true,
+      stok: true,
+    },
+  });
+
+  // if (!barangById) {
+  //   return res.status(404).json({
+  //     message: "Barang tidak ditemukan",
+  //   });
+  // }
+
   return res.status(200).json({
-    data
+    message: "Data barang berdasarkan id",
+    data: barangById ? {
+      id: Number(barangById.id),
+      nama: barangById.nama,
+      harga: Number(barangById.harga),
+      stok: Number(barangById.stok),
+    } : {}
   });
 });
+
 
 router.post('/tambahBarang', async (req, res) => {
   const {
