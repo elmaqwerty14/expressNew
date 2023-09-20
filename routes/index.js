@@ -27,6 +27,7 @@ router.get('/barang', async (req, res) => {
   });
 });
 
+  // Tambah barang
 router.get('/tambahbarang', async (req, res) => {
   res.render('tambahbarang'); // Render halaman tambahbarang.ejs
 });
