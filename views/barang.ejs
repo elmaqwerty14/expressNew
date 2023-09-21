@@ -19,26 +19,23 @@
                         <th>Nama</th>
                         <th>Stok</th>
                         <th>Harga</th>
+                        <th>Action</th>
                     </tr>
                     <% 
                     let nomor=1 
                     const IDR = new Intl.NumberFormat('id-ID', 
-                    {style: 'currency' , 
-                    currency: 'IDR' , 
+                    {
+                        style: 'currency' , 
+                        currency: 'IDR' , 
                     }) %>
                         <% barang.forEach((item)=> {%>
                             <tr>
+                                <td><%= nomor++ %></td>
+                                <td><%= item.nama %></td>
+                                <td><%= item.stok %></td>
+                                <td><%= IDR.format(item.harga) %></td>
                                 <td>
-                                    <%= nomor++ %>
-                                </td>
-                                <td>
-                                    <%= item.nama %>
-                                </td>
-                                <td>
-                                    <%= item.stok %>
-                                </td>
-                                <td>
-                                    <%= IDR.format(item.harga) %>
+                                    <a href="/editbarang/<%= item.id %>" class="btn btn-primary">Edit</a>
                                 </td>
                             </tr>
                         <% }) %>

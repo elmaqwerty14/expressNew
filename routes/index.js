@@ -30,7 +30,7 @@ router.get('/barang', async (req, res) => {
   // Tambah barang
 router.get('/tambahbarang', async (req, res) => {
   res.render('tambahbarang'); // Render halaman tambahbarang.ejs
-});
+
 
 router.post('/tambahbarang', async (req, res) => {
   const { nama, harga, stok } = req.body;
@@ -51,7 +51,34 @@ router.post('/tambahbarang', async (req, res) => {
     message: "Data barang berhasil ditambahkan"
   });
 });
+});
 
+// Edit barang - Render the editbarang.ejs template
+router.get('/editbarang/:id', async (req, res) => {
+  const itemId = req.params.id;
+  const itemToEdit = await prisma.barang.findUnique({
+      where: { id: parseInt(itemId) },
+  });
+  res.render('editbarang', { item: itemToEdit });
+});
 
+  
+// Route untuk mengedit data barang berdasarkan ID
+router.put('/updateBarang/:id', async (req, res) => {
+  console.log('Update barang route reached');
+  const { id } = req.params; // Mengambil ID dari parameter URL
+  const { nama, harga, stok } = req.body; // Mengambil data yang akan diubah dari permintaan
+
+  await prisma.barang.update({
+    where: { id: parseInt(id) }, // Menggunakan parseInt karena ID biasanya berupa angka
+    data: {
+      nama,
+      harga,
+      stok,
+    },
+  });
+
+  res.redirect('/barang'); 
+  });
 
 module.exports = router;
