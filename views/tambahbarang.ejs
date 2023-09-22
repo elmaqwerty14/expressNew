@@ -1,32 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Barang</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
+<%- include('bagian/header') %>
+
     <div class="container mt-5">
-        <h1>Tambah Barang</h1>
-        <form action="/tambahbarang" method="POST">
-            <div class="form-group">
-                <label for="nama">Nama Barang:</label>
-                <input type="text" class="form-control" id="nama" name="nama" required>
-            </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <% if(error.length > 0) { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <ul>
+                            <% error.forEach((item) => { %>
+                            <li><%= item.path %> <%= item.msg %></li>
+                            <% }) %>
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <% } %>
 
-            <div class="form-group">
-                <label for="harga">Harga Barang:</label>
-                <input type="text" class="form-control" id="harga" name="harga" required>
-            </div>
 
-            <div class="form-group">
-                <label for="stok">Stok Barang:</label>
-                <input type="text" class="form-control" id="stok" name="stok" required>
+                <h1>Tambah Barang</h1>
+                <form action="/tambahbarang" method="POST">
+                    <div class="form-group">
+                        <label for="nama">Nama Barang:</label>
+                        <input type="text" class="form-control" id="nama" name="nama">
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="harga">Harga Barang:</label>
+                        <input type="text" class="form-control" id="harga" name="harga">
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="stok">Stok Barang:</label>
+                        <input type="text" class="form-control" id="stok" name="stok">
+                    </div>
+        
+                    <button type="submit" class="btn btn-primary">Tambah Barang</button>
+                </form>
             </div>
-
-            <button type="submit" class="btn btn-primary">Tambah Barang</button>
-        </form>
+        </div>
     </div>
-</body>
-</html>
+    
+<%- include('bagian/footer') %>

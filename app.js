@@ -8,12 +8,25 @@ require('dotenv').config();
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const session = require('express-session');
+const flash = require('connect-flash');
 
 const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+app.use(bodyParser.urlencoded({ extended : false}));
+app.use(bodyParser.json());
+
+app.use(session({
+  secret:'elma',
+  saveUninitialized: true,
+  resave: true
+}));
+
+app.use(flash());
 
 app.use(logger('dev'));
 app.use(express.json());
