@@ -34,3 +34,10 @@ model users {
   alamat    String?     @db.VarChar
   transaksi transaksi[]
 }
+
+model admin {
+  id        serial4         @id @default(autoincrement())
+  nama      String?     @db.VarChar
+  username  String?     @db.VarChar
+  token     String?     @db.VarChar
+}

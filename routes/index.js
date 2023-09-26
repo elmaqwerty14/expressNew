@@ -3,12 +3,121 @@ const { route } = require('./users');
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const { body, validationResult } = require('express-validator');
+const session = require('express-session');
+const flash = require('express-flash');
 
 const prisma = new PrismaClient();
+
+router.use(session({
+  secret:'elma',
+  saveUninitialized: true,
+  resave: true
+}));
+
+router.use(flash());
+
+async function authenticate(req, res, next) {
+  if (req.session.isLoggedIn) {
+    // User is authenticated
+    // console.log(session);
+    next();
+  } else {
+    // Redirect to the home page or display an error message
+    res.redirect('/login');
+  }
+}
+
+function logUserAccess(req, res, next) {
+  if (req.session.isLoggedIn && req.session.user) {
+    // If the user is logged in and user information is in the session, log the user's name and the accessed route
+    console.log(`User ${req.session.user.nama} accessed ${req.originalUrl}`);
+  } else {
+    console.log('User is not authenticated.');
+  }
+  next();
+}
+
+
+
+// Apply authentication middleware to relevant routes
+router.use(['/barang', '/tambahbarang', '/editbarang', '/hapusBarang'], authenticate);
+
+
+// Apply the logUserAccess middleware to all routes
+router.use(logUserAccess);
+
+
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
+});
+
+// router.get('/login', (req, res) => {
+//   res.render('login', {
+//     error: req.flash("error"),
+//     success: req.flash("success")
+//   });
+// });
+
+router.get('/login', (req, res) => {
+  if (req.session.isLoggedIn) {
+    res.redirect('/barang');
+  } else {
+    // If not logged in, render the login page
+    res.render('login', {
+      error: req.flash("error"),
+      success: req.flash("success")
+    });
+  }
+});
+
+
+// ...
+router.post('/loginUser', async (req, res) => {
+  const { nama, username, token } = req.body;
+
+  const user = await prisma.admin.findFirst({
+    where: {
+      nama: nama,
+      username: username,
+      token: token
+    }
+  });
+
+  if (user) {
+    req.session.isLoggedIn = true;
+    req.session.user = {
+      id: user.id.toString(), // Mengonversi BigInt ke string
+      nama: user.nama,
+      // lainnya sesuai kebutuhan
+    };
+    req.flash('success', 'Login berhasil');
+
+    req.session.save((err) => {
+      if (err) {
+        console.error('Error saving session:', err);
+      }
+      res.redirect('/barang');
+    });
+
+    console.log(`User ${user.nama} telah berhasil login.`);
+  } else {
+    req.flash('error', 'Login gagal. Silakan coba lagi.');
+    res.redirect('/login');
+  }
+});
+
+
+
+router.get('/logout', (req, res) => {
+  // Destroy the session to log out the user
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Error destroying session:', err);
+    }
+    res.redirect('/login');
+  });
 });
 
 router.get('/barang', async (req, res) => {
@@ -19,11 +128,11 @@ router.get('/barang', async (req, res) => {
   let barang;
 
   const whereCondition = searchQuery ? {
-      nama:{
-        startsWith: `${searchQuery}`,
-        mode: 'insensitive'
-      },
-    }
+    nama: {
+      startsWith: `${searchQuery}`,
+      mode: 'insensitive'
+    },
+  }
     : {};
 
   const totalItems = await prisma.barang.count({
@@ -69,8 +178,6 @@ router.get('/barang', async (req, res) => {
   });
 });
 
-
-
 // Tambah barang
 router.get('/tambahbarang', async (req, res) => {
   res.render('tambahbarang', {
@@ -78,7 +185,7 @@ router.get('/tambahbarang', async (req, res) => {
   }); // Render halaman tambahbarang.ejs
 });
 
-router.post('/tambahbarang',
+router.post('/tambahbarang', 
   body('nama').notEmpty(),
   body('harga')
     .notEmpty().withMessage("harga wajib diisi")
@@ -113,12 +220,12 @@ router.post('/tambahbarang',
 
 
 // Edit barang - Render the editbarang.ejs template
-router.get('/editbarang/:id', async (req, res) => {
+router.get('/editbarang/:id',  async (req, res) => {
   const itemId = req.params.id;
   const itemToEdit = await prisma.barang.findUnique({
     where: { id: parseInt(itemId) },
   });
-  res.render('editbarang', { 
+  res.render('editbarang', {
     item: itemToEdit,
     error: req.flash("error")
   });
@@ -128,48 +235,48 @@ router.get('/editbarang/:id', async (req, res) => {
 // Route untuk mengedit data barang berdasarkan ID
 router.post('/updateBarang/:id', 
   body('nama').notEmpty(),
-    body('harga')
-      .notEmpty().withMessage("harga wajib diisi")
-      .isInt().withMessage("harga harus diisi angka"),
-    body('stok')
-      .notEmpty().withMessage("stok wajib diisi")
-      .isInt().withMessage("stok harus diisi angka"),
+  body('harga')
+    .notEmpty().withMessage("harga wajib diisi")
+    .isInt().withMessage("harga harus diisi angka"),
+  body('stok')
+    .notEmpty().withMessage("stok wajib diisi")
+    .isInt().withMessage("stok harus diisi angka"),
 
-    async (req, res) => {
-      const validationError = validationResult(req);
-      if (!validationError.isEmpty()) {
-        req.flash("error", validationError.array());
-        return res.redirect('/editbarang'+req.params.id);
-      }
+  async (req, res) => {
+    const validationError = validationResult(req);
+    if (!validationError.isEmpty()) {
+      req.flash("error", validationError.array());
+      return res.redirect('/editbarang' + req.params.id);
+    }
 
-      const { id } = req.params;
-      const { nama, harga, stok } = req.body;
+    const { id } = req.params;
+    const { nama, harga, stok } = req.body;
 
 
-      await prisma.barang.update({
-        where: { id: parseInt(id) },
-        data: {
-          nama: nama,
-          harga: Number(harga),
-          stok: Number(stok),
-        },
-      });
-    
+    await prisma.barang.update({
+      where: { id: parseInt(id) },
+      data: {
+        nama: nama,
+        harga: Number(harga),
+        stok: Number(stok),
+      },
+    });
+
     req.flash("success", "Berhasil edit data barang");
     return res.redirect('/barang');
-    }
-    );
+  }
+);
 
 
 
-    router.get('/hapusBarang/:id', async (req, res) => {
-      const { id } = req.params; // Mengambil ID dari parameter URL
-    
-      await prisma.barang.delete({
-        where: { id: parseInt(id) }, // Menggunakan parseInt karena ID biasanya berupa angka
-      });
-    
-      res.redirect('/barang');
-    });
+router.get('/hapusBarang/:id', async (req, res) => {
+  const { id } = req.params; // Mengambil ID dari parameter URL
+
+  await prisma.barang.delete({
+    where: { id: parseInt(id) }, // Menggunakan parseInt karena ID biasanya berupa angka
+  });
+
+  res.redirect('/barang');
+});
 
 module.exports = router;
